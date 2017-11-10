@@ -6,11 +6,11 @@
 package Algoritmos.P2;
 
 import Utils.Restricciones;
+import static Utils.Utilidades.*;
 import Utils.listaTransmisores;
 import Utils.rangoFrec;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import static main.main.NUMERO;
@@ -25,24 +25,37 @@ public class Generacional {
     List<Integer> transmisores = new ArrayList<> ();
     List<Integer> frecuenciasR = new ArrayList<>();
     Restricciones restricciones;
-    int resultado;
+    int []resultado = new int [50];
+    
+    List<List<Integer>> padres = new ArrayList<> ();
+    List<List<Integer>> hijos = new ArrayList<> ();
     
     public Generacional(listaTransmisores _transmisores, rangoFrec _frecuencias, Restricciones _rest ) throws FileNotFoundException {
         frecuencias = _frecuencias.rangoFrecuencias;
         transmisores = _transmisores.transmisores;
         restricciones = _rest;
         
+        for ( int i = 0; i < 50; i++ ){
+            padres.add(new ArrayList<>());
+        }
+        
+        for ( int i = 0; i < 50; i++ ) {
+            greedyInicial(i);
+        }
+    }
+    
+    void greedyInicial ( int id ) throws FileNotFoundException {
+                
         for ( int i = 0; i < transmisores.size(); i++ ) {
             frecuenciasR.add(0);
         }
-        
-        greedyInicial();
-    }
-    
-    void greedyInicial () throws FileNotFoundException {
 
         Random numero = NUMERO;
         int seleccionado = numero.nextInt(transmisores.size());
+        
+        int tamanio = frecuencias.get(transmisores.get(seleccionado)).size();
+        int frecuenciaRandom = frecuencias.get(transmisores.get(seleccionado)).get(numero.nextInt(tamanio));
+        frecuenciasR.set(seleccionado, frecuenciaRandom);
         
         System.out.println("Transmisor seleccionado: "+seleccionado);
         
@@ -68,7 +81,7 @@ public class Generacional {
 
                     frecuencia = frecuencias.get(transmisores.get(transmisor)).get(pos);
                     nuevaLista.set(transmisor, frecuencia);
-                    List<List<Integer>> listaRest = compruebaTransmisores(transmisor);
+                    List<List<Integer>> listaRest = compruebaTransmisores(transmisor, restricciones, frecuenciasR);
 
                     if ( listaRest.size() > 0 ) { // Lista no vacía, se selecciona frecuencia que afecte lo menos posible al resultado
 
@@ -83,7 +96,7 @@ public class Generacional {
                         }
                     } else { // En caso de que la lista este vacía no hay restricciones que se puedan satisfacer -> frecuencia aleatoria
 
-                        int tamanio = frecuencias.get(transmisores.get(transmisor)).size();
+                        tamanio = frecuencias.get(transmisores.get(transmisor)).size();
                         frecuenciaR = frecuencias.get(transmisores.get(transmisor)).get(numero.nextInt(tamanio));
                         valor = 0;
                         encontrado = true;
@@ -94,100 +107,13 @@ public class Generacional {
             }
             transmisor++;
         }
-        resultado = rDiferencia(frecuenciasR, restricciones);
+        resultado[id] = rDiferencia(frecuenciasR, restricciones);
+        padres.get(id).addAll(frecuenciasR);
+        frecuenciasR.clear(); // Borra todos los elementos anteriores para nueva solucion
     }
     
-        /**
-     * Funcion que devuelve una lista con las restricciones que puede satisfacer
-     * un transmisor
-     *
-     * @param transmisor
-     * @return
-     * @throws FileNotFoundException
-     */
-    private List<List<Integer>> compruebaTransmisores ( int transmisor ) throws FileNotFoundException {
-        int contador = 0;
-        List<List<Integer>> listaRest = new ArrayList<>();
-        List<List<Integer>> listaT = restricciones.restriccionesTransmisor(transmisor);
-        for ( int i = 0; i < listaT.size(); i ++ ) {
-            if ( frecuenciasR.get(listaT.get(i).get(0) - 1) != 0 || frecuenciasR.get(listaT.get(i).get(1) - 1) != 0 ) {
-                listaRest.add(new LinkedList<>());
-                listaRest.get(contador ++).addAll(listaT.get(i));
-            }
-        }
-
-        return listaRest;
-    }
-    
-    private int rDiferencia ( List<Integer> valores, List<List<Integer>> rest ) {
-        int total = 0;
-        for ( int i = 0; i < rest.size(); i ++ ) {
-            int tr1 = rest.get(i).get(0);
-            int tr2 = rest.get(i).get(1);
-            int diferencia = rest.get(i).get(2);
-            int result = rest.get(i).get(3);
-
-            if ( Math.abs(valores.get(tr1 - 1) - valores.get(tr2 - 1)) > diferencia ) {
-                total += result;
-            }
-
-        }
-
-        return total;
-    }
-
-    public int rDiferencia ( List<Integer> valores, Restricciones rest ) throws FileNotFoundException {
-
-        int total = 0;
-        for ( int i = 0; i < rest.restricciones.size(); i ++ ) {
-            int tr1 = rest.restricciones.get(i).get(0);
-            int tr2 = rest.restricciones.get(i).get(1);
-            int diferencia = rest.restricciones.get(i).get(2);
-            int result = rest.restricciones.get(i).get(3);
-
-            if ( Math.abs(valores.get(tr1 - 1) - valores.get(tr2 - 1)) > diferencia ) {
-                total += result;
-            }
-
-        }
-
-        return total;
-    }
-
-    /**
-     * Calcula el resultado del problema a minimizar
-     *
-     * @param valores Valores de los transmisores
-     * @param cambioTransmisor Transmisor al que se le aplico un cambio de
-     * frecuencia
-     * @param rest Restricciones a evaluar
-     * @return
-     * @throws FileNotFoundException
-     */
-    public int rDiferencia ( List<Integer> valores, int cambioTransmisor, Restricciones rest ) throws FileNotFoundException {
-
-        List<List<Integer>> listaRest = new ArrayList<>();
-        listaRest = rest.restriccionesTransmisor(cambioTransmisor);
-
-        int total = 0;
-        for ( int i = 0; i < listaRest.size(); i ++ ) {
-
-            int tr1 = listaRest.get(i).get(0);
-            int tr2 = listaRest.get(i).get(1);
-
-            if ( tr1 == cambioTransmisor + 1 || tr2 == cambioTransmisor + 1 ) {
-                int diferencia = listaRest.get(i).get(2);
-                int result = listaRest.get(i).get(3);
-
-                if ( Math.abs(valores.get(tr1 - 1) - valores.get(tr2 - 1)) > diferencia ) {
-                    total += result;
-                }
-
-            }
-
-        }
-
-        return total;
+    void generarHijos () {
+        
     }
     
     public void resultados () {
