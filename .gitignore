@@ -3,3 +3,4 @@
 
 #Exclude dist
 /dist/
+/build/
