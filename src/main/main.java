@@ -79,7 +79,7 @@ public class main {
                         startTime = System.nanoTime();
                         Generacional generacional = new Generacional(transmisores, frecuencias, rest);
                         endTime = System.nanoTime();
-                        generacional.resultados();
+                        generacional.resMejorIndividuo();
                         
                         duration = (endTime - startTime) / 1000000000;
                         System.out.println("Tiempo de ejecucion: " + duration + " segundos");
