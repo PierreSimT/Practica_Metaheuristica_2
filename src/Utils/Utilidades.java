@@ -111,4 +111,8 @@ public class Utilidades {
         return total;
     }
     
+    public static boolean convergencia ( List<List<Integer>> poblacion ) {
+        return true;
+    }
+    
 }
