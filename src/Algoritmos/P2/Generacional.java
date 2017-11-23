@@ -52,7 +52,7 @@ public class Generacional {
         }
 
         //Loop hasta 20000 evaluaciones
-        while ( numEvaluaciones < 20000) {
+        while ( numEvaluaciones < 0) {
             System.out.print((numEvaluaciones+1)+" : ");
             generarHijos();
             cruzarIndividuos();
@@ -85,8 +85,6 @@ public class Generacional {
             listaRestric = restricciones.restriccionesTransmisor(transmisor);
             if (transmisor != seleccionado && listaRestric.size() > 0) {
 
-                if ( transmisor == 62 )
-                    System.out.println("hola");
                 int minimo = Integer.MAX_VALUE;
                 boolean encontrado = false;
                 int frecuenciaR = 0;
@@ -347,17 +345,9 @@ public class Generacional {
         auxiliar = Arrays.copyOf(resultado, 50);
         Arrays.sort(auxiliar);
 
-
         int contador = 1;
         boolean convergencia = false;
-        int maximo = Integer.MIN_VALUE;
-        
-        List<List<Integer>> auxiliarP = new ArrayList<> ();
-        auxiliarP.addAll(padres);
-        
-        for ( int i = 0; i < auxiliarP.size(); i++ ) {
-            Collections.sort(auxiliarP.get(i));
-        }
+        int maximo = Integer.MIN_VALUE;        
         
         for ( int i = 1; i < auxiliar.length; i++ ) {
             if ( contador >= 40 ) {
@@ -371,21 +361,30 @@ public class Generacional {
         }
         
         // Preguntar al profesor puesto que añade complejidad
-//        if ( convergencia ) {
-//            contador = 1;
-//            convergencia = false;
-//            for ( int i = 1; i < auxiliarP.size(); i++ ) {
-//                if ( contador >= 40 ) {
-//                    convergencia = true;
-//                    System.out.print(" Convergencia dada : ");
-//                    break;
-//                }
-//                if ( auxiliarP.get(i).equals(auxiliarP.get(i-1)) )
-//                    contador++;
-//                else
-//                    contador = 1;
-//            }
-//        }
+        if ( convergencia ) {
+            
+            List<List<Integer>> auxiliarP = new ArrayList<> ();
+        
+            for ( int i = 0; i < padres.size(); i++ ) {           
+                auxiliarP.add(new ArrayList<> ());
+                auxiliarP.get(i).addAll(padres.get(i));
+                Collections.sort(auxiliarP.get(i));
+            }
+            
+            contador = 1;
+            convergencia = false;
+            for ( int i = 1; i < auxiliarP.size(); i++ ) {
+                if ( contador >= 40 ) {
+                    convergencia = true;
+                    System.out.print(" Convergencia dada : ");
+                    break;
+                }
+                if ( auxiliarP.get(i).equals(auxiliarP.get(i-1)) )
+                    contador++;
+                else
+                    contador = 1;
+            }
+        }
         
         return convergencia;
     }
