@@ -30,6 +30,7 @@ public class Generacional {
     int [] resultado = new int [50];
     List<List<Integer>> padres = new ArrayList<>();
     List<List<Integer>> hijos = new ArrayList<>();
+    List<Integer> transmisoresPosibles = new ArrayList<>();
     
     int idMejorResult;
     int mejorResult = Integer.MAX_VALUE;
@@ -52,8 +53,8 @@ public class Generacional {
         }
 
         //Loop hasta 20000 evaluaciones
-        while ( numEvaluaciones < 0) {
-            System.out.print((numEvaluaciones+1)+" : ");
+        while ( numEvaluaciones < 20000) {
+            System.out.print((numEvaluaciones)+" : ");
             generarHijos();
             cruzarIndividuos();
             mutarIndividuos();
@@ -170,8 +171,8 @@ public class Generacional {
 
         //mutamos k genes, k= 0,1
         //esperanza matematica= 0,1*numTransmisores
-//        double numMutar = 0.1 * transmisores.size();
-        int transmisorMut = numero.nextInt(transmisores.size());
+        
+        int transmisorMut = numero.nextInt(hijos.get(seleccionado).size());
         int frecAsociada = transmisores.get(transmisorMut);
 
         int frecuenciaMut = numero.nextInt(frecuencias.get(frecAsociada).size());
@@ -203,28 +204,39 @@ public class Generacional {
         List<Integer> solucion2 = new ArrayList<>();
 
         //Primer cruce
-        for (int i = 0; i < seleccionado; i++) {
-            solucion1.add(i, hijos.get(individuo1).get(i));
-        }
-        for (int i = seleccionado; i < seleccionado2; i++) {
-            solucion1.add(i, hijos.get(individuo2).get(i));
-        }
-        for (int i = seleccionado2; i < transmisores.size(); i++) {
-            solucion1.add(i, hijos.get(individuo1).get(i));
-        }
+        
+        solucion1.addAll(0, hijos.get(individuo1).subList(0, seleccionado));
+        solucion1.addAll(seleccionado, hijos.get(individuo2).subList(seleccionado, seleccionado2));
+        solucion1.addAll(seleccionado2, hijos.get(individuo1).subList(seleccionado2, transmisores.size()));
+        
+//        for (int i = 0; i < seleccionado; i++) {
+//            solucion1.add(i, hijos.get(individuo1).get(i));
+//        }
+//        for (int i = seleccionado; i < seleccionado2; i++) {
+//            solucion1.add(i, hijos.get(individuo2).get(i));
+//        }
+        
+//        for (int i = seleccionado2; i < transmisores.size(); i++) {
+//            solucion1.add(i, hijos.get(individuo1).get(i));
+//        }
 
         hijos.set(individuo1, solucion1);
 
         //Segundo cruce
-        for (int i = 0; i < seleccionado; i++) {
-            solucion2.add(i, hijos.get(individuo2).get(i));
-        }
-        for (int i = seleccionado; i < seleccionado2; i++) {
-            solucion2.add(i, hijos.get(individuo1).get(i));
-        }
-        for (int i = seleccionado2; i < transmisores.size(); i++) {
-            solucion2.add(i, hijos.get(individuo2).get(i));
-        }
+        
+        solucion2.addAll(0, hijos.get(individuo2).subList(0, seleccionado));
+        solucion2.addAll(seleccionado, hijos.get(individuo1).subList(seleccionado, seleccionado2));
+        solucion2.addAll(seleccionado2, hijos.get(individuo2).subList(seleccionado2, transmisores.size()));
+        
+//        for (int i = 0; i < seleccionado; i++) {
+//            solucion2.add(i, hijos.get(individuo2).get(i));
+//        }
+//        for (int i = seleccionado; i < seleccionado2; i++) {
+//            solucion2.add(i, hijos.get(individuo1).get(i));
+//        }
+//        for (int i = seleccionado2; i < transmisores.size(); i++) {
+//            solucion2.add(i, hijos.get(individuo2).get(i));
+//        }
 
         hijos.set(individuo2, solucion2);
 
@@ -400,28 +412,11 @@ public class Generacional {
         }
         List<Integer> mejorIndividuo = padres.get(actual);
 
-        for (int i = 0; i < transmisores.size() - 1; i++) {
-            System.out.println("Transmisor " + (i + 1) + ": " + padres.get(actual).get(i));
+        for (int i = 0; i < mejorIndividuo.size(); i++) {
+            if ( mejorIndividuo.get(i) != 0 )
+                System.out.println("Transmisor " + (i + 1) + ": " + mejorIndividuo.get(i));
         }
 
         System.out.println(resultado[actual]);
-    }
-    
-    public List<Integer> resMejorIndividuo1() throws FileNotFoundException {
-        int minimo = Integer.MAX_VALUE;
-        int actual = 0;
-        for (int i = 0; i < 50; i++) {
-            if (resultado[i] < minimo) {
-                minimo = resultado[i];
-                actual = i;
-            }
-        }
-        List<Integer> mejorIndividuo = padres.get(actual);
-
-        for (int i = 0; i < transmisores.size() - 1; i++) {
-            System.out.println("Transmisor " + (i + 1) + ": " + padres.get(actual).get(i));
-        }
-
-        return mejorIndividuo;
     }
 }

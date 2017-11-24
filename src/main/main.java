@@ -43,7 +43,7 @@ public class main {
         System.out.println("Conjunto de archivos que quiere usar: ");
         Scanner reader = new Scanner(System.in);
         DIRECTORIO = reader.next();
-        LINEAS = countLines(DIRECTORIO) + 1;
+        LINEAS = countLines(DIRECTORIO)+1;
 
         rangoFrec frecuencias = new rangoFrec();
         listaTransmisores transmisores = new listaTransmisores();

@@ -28,7 +28,7 @@ public class listaTransmisores {
         }
         File file = new File(main.TRABAJO + "/conjuntos/" + main.DIRECTORIO + "/" + datos);
 
-        for ( int i = 0; i < LINEAS; i ++ ) {
+        for ( int i = 0; i < LINEAS-1; i ++ ) {
             transmisores.add(0);
         }
 
@@ -40,7 +40,7 @@ public class listaTransmisores {
             int transmisor = linea.nextInt();
             while( linea.hasNext() && cont < 1 ) {
                 int token = linea.nextInt();
-                transmisores.set(transmisor, token);
+                transmisores.set(transmisor-1, token);
                 cont ++;
             }
             linea.close();
