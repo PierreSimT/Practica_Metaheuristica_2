@@ -55,12 +55,10 @@ public class Generacional {
 
         //Loop hasta 20000 evaluaciones
         while( numEvaluaciones < 20000 ) {
-            System.out.print((numEvaluaciones) + " : ");
             generarHijos();
             cruzarIndividuos();
             mutarIndividuos();
             nuevaGeneracion();
-            System.out.println();
         }
 
     }
@@ -349,7 +347,6 @@ public class Generacional {
 
         if ( numGeneraciones >= 20 || comprobarConvergencia() ) {
             reinicializacion();
-            System.out.print("Reinicializacion en curso");
             numGeneraciones = 0;
         }
     }
@@ -424,7 +421,6 @@ public class Generacional {
             for ( int i = 1; i < auxiliarP.size(); i ++ ) {
                 if ( contador >= 40 ) {
                     convergencia = true;
-                    System.out.print(" Convergencia dada : ");
                     break;
                 }
                 if ( auxiliarP.get(i).equals(auxiliarP.get(i - 1)) ) {

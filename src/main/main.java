@@ -5,7 +5,7 @@
  */
 package main;
 
-import Algoritmos.P2.Generacional;
+import Algoritmos.P2.*;
 import Utils.Restricciones;
 import Utils.listaTransmisores;
 import Utils.rangoFrec;
@@ -62,14 +62,14 @@ public class main {
                 NUMERO.setSeed(semilla);
             }
 
-//            try {
+            try {
                 System.out.print("Elige opción:\n"
                         + "1.- Generacional (2 Puntos)\n"
                         + "2.- Generacional (BLX)\n"
                         + "3.- Estacionario (2 Puntos)\n"
                         + "4.- Estacionario (BLX)\n"
-                        + "5.- ----\n"
-                        + "6.- ----\n "
+                        + "5.- Cambiar conjunto de archivos\n"
+                        + "6.- Cambiar semilla\n "
                         + "0.- Salir"
                         + "\n: ");
 
@@ -97,25 +97,25 @@ public class main {
                         System.out.println("Tiempo de ejecucion: " + duration + " segundos");
                         break;
                     case 3:
-//                        startTime = System.nanoTime();
-//                        BusquedaTabu busquedaTabu = new BusquedaTabu(transmisores, frecuencias, rest);
-//                        busquedaTabu.algoritmo();
-//                        endTime = System.nanoTime();
-//
-//                        busquedaTabu.resultados();
-//                        duration = (endTime - startTime) / 1000000000;
-//                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
+                        startTime = System.nanoTime();
+                        Estacionario.cruce = false;
+                        Estacionario estacionario = new Estacionario(transmisores, frecuencias, rest);
+                        endTime = System.nanoTime();
+
+                        estacionario.resMejorIndividuo();
+                        duration = (endTime - startTime) / 1000000000;
+                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
 
                         break;
                     case 4:
-//                        startTime = System.nanoTime();
-//                        Grasp grasp = new Grasp(transmisores, frecuencias, rest);
-//                        grasp.algoritmo();
-//                        endTime = System.nanoTime();
-//
-//                        grasp.resultados();
-//                        duration = (endTime - startTime) / 1000000000;
-//                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
+                        startTime = System.nanoTime();
+                        Estacionario.cruce = true;
+                        estacionario = new Estacionario(transmisores, frecuencias, rest);
+                        endTime = System.nanoTime();
+
+                        estacionario.resMejorIndividuo();
+                        duration = (endTime - startTime) / 1000000000;
+                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
                         break;
                     case 5:
                         System.out.println("Conjunto de archivos que quiere usar: ");
@@ -142,9 +142,9 @@ public class main {
 
                 System.out.println("\n"); //Mostrar un salto de línea en Java
 
-//            } catch( Exception e ) {
-//                System.out.println("Uoop! Error! " + e.toString());
-//            }
+            } catch( Exception e ) {
+                System.out.println("Uoop! Error! " + e.toString());
+            }
             contador = Math.floorMod(contador + 1, 5);
         }
     }
