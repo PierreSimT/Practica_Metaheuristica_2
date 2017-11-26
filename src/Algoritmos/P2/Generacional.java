@@ -184,7 +184,6 @@ public class Generacional {
     }
 
     void algBX ( int individuo1, int individuo2 ) {
-        System.out.print(" BLX : ");
         List<Integer> solucion1 = new ArrayList<>();
         List<Integer> solucion2 = new ArrayList<>();
 
@@ -205,18 +204,20 @@ public class Generacional {
                 cmax = hijos.get(individuo2).get(i);
             }
 
-            double vmin = cmin - d * alfa;
-            double vmax = cmax + d * alfa;
-
+            int vmin = (int) (cmin - d * alfa);
+            int vmax = (int) (cmax + d * alfa);
+            
             int frecAsociada = transmisores.get(i);
 
             //Para la solución 1
-            int valorObtenido = (int) Math.floor(Math.random() * (vmax - vmin + 1) + vmin);
+            Random numero = NUMERO;
+            int valorObtenido = numero.nextInt(vmax+1)+vmin;
             int minimaDiferencia = Integer.MAX_VALUE;
             int frecuenciaFinal = 0;
 
             for ( int j = 0; j < frecuencias.get(frecAsociada).size(); j ++ ) {
                 if ( Math.abs(valorObtenido - frecuencias.get(frecAsociada).get(j)) < minimaDiferencia ) {
+                    minimaDiferencia = Math.abs(valorObtenido - frecuencias.get(frecAsociada).get(j));
                     frecuenciaFinal = frecuencias.get(frecAsociada).get(j);
                 }
             }
@@ -230,6 +231,7 @@ public class Generacional {
 
             for ( int j = 0; j < frecuencias.get(frecAsociada).size(); j ++ ) {
                 if ( Math.abs(valorObtenido2 - frecuencias.get(frecAsociada).get(j)) < minimaDiferencia2 ) {
+                    minimaDiferencia2 = Math.abs(valorObtenido2 - frecuencias.get(frecAsociada).get(j));
                     frecuenciaFinal2 = frecuencias.get(frecAsociada).get(j);
                 }
             }
