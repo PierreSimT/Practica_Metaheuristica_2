@@ -97,6 +97,7 @@ public class main {
                         break;
                     case 3:
                         startTime = System.nanoTime();
+                        Estacionario.cruce = true;
                         Estacionario estacionario = new Estacionario(transmisores, frecuencias, rest);
                         endTime = System.nanoTime();
 //

@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import static main.main.NUMERO;
 
 /**
@@ -25,7 +23,7 @@ import static main.main.NUMERO;
  */
 public class Estacionario {
 
-    static boolean cruce;
+    public static boolean cruce;
 
     List<List<Integer>> frecuencias = new ArrayList<>();
     List<Integer> transmisores = new ArrayList<>();
@@ -38,6 +36,7 @@ public class Estacionario {
 
     int idMejorResult;
     int mejorResult = Integer.MAX_VALUE;
+    double alfa = 0.5;
 
     int numGeneraciones = 0;
     int numEvaluaciones = 0;
@@ -57,10 +56,12 @@ public class Estacionario {
         }
 
         while( numEvaluaciones < 20000 ) {
+            System.out.print((numEvaluaciones+1)+" : ");
             generarHijos();
             cruzarIndividuos();
             mutarIndividuos();
             nuevaGeneracion();
+            System.out.println();
         }
 
     }
@@ -79,8 +80,6 @@ public class Estacionario {
         int tamanio = frecuencias.get(transmisores.get(seleccionado)).size();
         int frecuenciaRandom = frecuencias.get(transmisores.get(seleccionado)).get(numero.nextInt(tamanio));
         frecuenciasR.set(seleccionado, frecuenciaRandom);
-
-        System.out.println("Transmisor seleccionado: " + seleccionado);
 
         List<List<Integer>> listaRestric = new ArrayList<>();
         int transmisor = 0;
@@ -140,19 +139,14 @@ public class Estacionario {
         while( cont < 2 ) {
             Random numero = NUMERO;
             int seleccionado = numero.nextInt(50);
-            System.out.println(seleccionado + ":" + resultado.get(seleccionado));
 
             Random numero2 = NUMERO;
             int seleccionado2 = numero.nextInt(50);
-            System.out.println(seleccionado2 + ":" + resultado.get(seleccionado2));
 
             if ( resultado.get(seleccionado) < resultado.get(seleccionado2) ) {
                 hijos.add(cont, padres.get(seleccionado));
-                System.out.println(seleccionado);
-
             } else {
                 hijos.add(cont, padres.get(seleccionado2));
-                System.out.println(seleccionado2);
             }
             cont ++;
         }
@@ -185,7 +179,68 @@ public class Estacionario {
     }
 
     void algBX ( int individuo1, int individuo2 ) {
+        
+        List<Integer> solucion1 = new ArrayList<>();
+        List<Integer> solucion2 = new ArrayList<>();
+        
+        for(int i=0;i<transmisores.size();i++){
+            int d=Math.abs(hijos.get(individuo1).get(i)-hijos.get(individuo2).get(i));
+            int cmin=Integer.MAX_VALUE;
+            int cmax=Integer.MIN_VALUE;
 
+            
+            if(hijos.get(individuo1).get(i)<hijos.get(individuo2).get(i)){
+                cmin=hijos.get(individuo1).get(i);
+            }else{
+                cmin=hijos.get(individuo2).get(i);
+            }
+            
+            if(hijos.get(individuo1).get(i)>hijos.get(individuo2).get(i)){
+                cmax=hijos.get(individuo1).get(i);
+            }else{
+                cmax=hijos.get(individuo2).get(i);
+            }
+            
+            double vmind=cmin-d*alfa;
+            double vmaxd=cmax+d*alfa;
+            int vmin=(int)vmind;
+            int vmax=(int)vmaxd;
+            
+            int frecAsociada=transmisores.get(i);
+            
+           //Para la solución 1
+           Random n=NUMERO;
+           int valorObtenido=n.nextInt(vmax+1)+vmin;
+           
+            int minimaDiferencia=Integer.MAX_VALUE;
+            int frecuenciaFinal=0;
+            
+            for(int j=0;j<frecuencias.get(frecAsociada).size();j++){
+                if(Math.abs(valorObtenido-frecuencias.get(frecAsociada).get(j))<minimaDiferencia){
+                     minimaDiferencia=Math.abs(valorObtenido-frecuencias.get(frecAsociada).get(j));
+                    frecuenciaFinal=frecuencias.get(frecAsociada).get(j);
+                }
+            }
+            
+            solucion1.add(i, frecuenciaFinal);
+
+            //Para la solución 2
+            int valorObtenido2=(int)Math.floor(Math.random()*(vmax-vmin+1)+vmin);
+            int minimaDiferencia2=Integer.MAX_VALUE;
+            int frecuenciaFinal2=0;
+            
+            for(int j=0;j<frecuencias.get(frecAsociada).size();j++){
+                if(Math.abs(valorObtenido2-frecuencias.get(frecAsociada).get(j))<minimaDiferencia2){
+                    minimaDiferencia2=Math.abs(valorObtenido2-frecuencias.get(frecAsociada).get(j));
+                    frecuenciaFinal2=frecuencias.get(frecAsociada).get(j);
+                }
+            }
+            
+            solucion2.add(i, frecuenciaFinal2);      
+        }      
+        
+        hijos.set(individuo1,solucion1);
+        hijos.set(individuo2,solucion2);
     }
 
     void algCruce2Puntos ( int individuo1, int individuo2 ) {
@@ -245,35 +300,37 @@ public class Estacionario {
 
         numEvaluaciones += 2;
 
-        List<List<Integer>> valoresResultantes = new ArrayList<>();        
-        int [] maximos = { maximo1, maximo2 };
-        int [] peores = { peor1, peor2 };
-        boolean entra;
-        for ( int i = 0; i < 2; i++ ) {
-            entra = false;
-            for ( int j = 0; j < 2; j++ ) {
-                if ( maximos[i] < resultadoHijos[j] )
-                    entra = true;
-            }
-            if ( entra )
-                valoresResultantes.add(peoresIndividuos.get(i));
+        int[] ordenar={maximo1,maximo2,resultadoHijos[0],resultadoHijos[1]};
+        Arrays.sort(ordenar);
+        
+        //Actualizo lista resultado
+        resultado.set(peor1, ordenar[0]);
+        resultado.set(peor2, ordenar[1]);
+        
+        //Actualizo la lista de listas padres con los resultados
+        if(ordenar[0]==maximo1){
+            padres.set(peor1,peoresIndividuos.get(0));
+        }else if(ordenar[0]==maximo2){
+            padres.set(peor1, peoresIndividuos.get(1));
+        }else if(ordenar[0]==resultadoHijos[0]){
+            padres.set(peor1,hijos.get(0));
+        }else{
+            padres.set(peor1,hijos.get(1));
         }
         
-        for ( int i = 0; i < 2; i++ ) {
-            
+        
+        
+        if(ordenar[1]==maximo1){
+            padres.set(peor2,peoresIndividuos.get(0));
+        }else if(ordenar[1]==maximo2){
+            padres.set(peor2, peoresIndividuos.get(1));
+        }else if(ordenar[1]==resultadoHijos[0]){
+            padres.set(peor2,hijos.get(0));
+        }else{
+            padres.set(peor2,hijos.get(1));
         }
-        
-        
         //Los hijos serán los padres para la siguiente generación
         hijos.clear();
-
-        for ( int i = 0; i < resultado.size(); i ++ ) {
-            resultado.set(i, resultadoHijos[ i ]); //rDiferencia(padres.get(i), restricciones);
-            if ( resultado.get(i) < mejorResult ) {
-                mejorResult = resultado.get(i);
-                idMejorResult = i;
-            }
-        }
 
         if ( aux == mejorResult ) {
             numGeneraciones ++;
@@ -283,7 +340,6 @@ public class Estacionario {
 
         if ( numGeneraciones >= 20 || comprobarConvergencia() ) {
             reinicializacion();
-            System.out.print("Reinicializacion en curso");
             numGeneraciones = 0;
         }
     }
@@ -339,7 +395,6 @@ public class Estacionario {
             }
         }
 
-        // Preguntar al profesor puesto que añade complejidad
         if ( convergencia ) {
 
             List<List<Integer>> auxiliarP = new ArrayList<>();
