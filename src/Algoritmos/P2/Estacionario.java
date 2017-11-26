@@ -440,4 +440,19 @@ public class Estacionario {
 
         System.out.println(resultado.get(actual));
     }
+    
+    public int resultadoFinal () {
+        int minimo = Integer.MAX_VALUE;
+        int actual = 0;
+        for ( int i = 0; i < 50; i ++ ) {
+            if ( resultado.get(i) < minimo ) {
+                minimo = resultado.get(i);
+                actual = i;
+            }
+        }
+        List<Integer> mejorIndividuo = padres.get(actual);
+        
+        return resultado.get(actual);
+    }
+    
 }

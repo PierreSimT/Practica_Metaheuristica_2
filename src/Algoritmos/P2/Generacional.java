@@ -453,4 +453,18 @@ public class Generacional {
 
         System.out.println(resultado[ actual ]);
     }
+    
+    public int resultadoFinal () {
+        int minimo = Integer.MAX_VALUE;
+        int actual = 0;
+        for ( int i = 0; i < 50; i ++ ) {
+            if ( resultado[ i ] < minimo ) {
+                minimo = resultado[ i ];
+                actual = i;
+            }
+        }
+        List<Integer> mejorIndividuo = padres.get(actual);
+        
+        return resultado[actual];
+    }
 }
