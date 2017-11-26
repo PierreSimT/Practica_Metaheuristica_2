@@ -183,7 +183,7 @@ public class Generacional {
     }
 
     void algBX(int individuo1, int individuo2) {
-
+        
     }
 
     void algCruce2Puntos(int individuo1, int individuo2) {
@@ -208,17 +208,6 @@ public class Generacional {
         solucion1.addAll(0, hijos.get(individuo1).subList(0, seleccionado));
         solucion1.addAll(seleccionado, hijos.get(individuo2).subList(seleccionado, seleccionado2));
         solucion1.addAll(seleccionado2, hijos.get(individuo1).subList(seleccionado2, transmisores.size()));
-        
-//        for (int i = 0; i < seleccionado; i++) {
-//            solucion1.add(i, hijos.get(individuo1).get(i));
-//        }
-//        for (int i = seleccionado; i < seleccionado2; i++) {
-//            solucion1.add(i, hijos.get(individuo2).get(i));
-//        }
-        
-//        for (int i = seleccionado2; i < transmisores.size(); i++) {
-//            solucion1.add(i, hijos.get(individuo1).get(i));
-//        }
 
         hijos.set(individuo1, solucion1);
 
@@ -228,16 +217,6 @@ public class Generacional {
         solucion2.addAll(seleccionado, hijos.get(individuo1).subList(seleccionado, seleccionado2));
         solucion2.addAll(seleccionado2, hijos.get(individuo2).subList(seleccionado2, transmisores.size()));
         
-//        for (int i = 0; i < seleccionado; i++) {
-//            solucion2.add(i, hijos.get(individuo2).get(i));
-//        }
-//        for (int i = seleccionado; i < seleccionado2; i++) {
-//            solucion2.add(i, hijos.get(individuo1).get(i));
-//        }
-//        for (int i = seleccionado2; i < transmisores.size(); i++) {
-//            solucion2.add(i, hijos.get(individuo2).get(i));
-//        }
-
         hijos.set(individuo2, solucion2);
 
     }
@@ -259,6 +238,7 @@ public class Generacional {
 
         List<Integer> mejorIndividuo = padres.get(actual);
 
+        // Evaluamos los hijos
         if(idMutado<=36){
         resultadoHijos = evaluar(hijos,36);
         numEvaluaciones+=36;
@@ -272,10 +252,7 @@ public class Generacional {
                 resultadoHijos[i] = resultado[i];
             }
 }
-        
-        //Evaluamos los hijos
-//        resultadoHijos = evaluar(hijos);
-//        resultadoHijos = evaluar(hijos);
+
         //Buscamos el hijo con el mayor coste
         int maximo = Integer.MIN_VALUE;
         int actual2 = 0;
