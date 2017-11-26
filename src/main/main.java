@@ -63,10 +63,11 @@ public class main {
             }
 
 //            try {
-                System.out.print("Elige opción:\n1.- Generacional"
-                        + "\n2.- Estacionario\n"
-                        + "3.- ----\n"
-                        + "4.- ----\n"
+                System.out.print("Elige opción:\n"
+                        + "1.- Generacional (2 Puntos)\n"
+                        + "2.- Generacional (BLX)\n"
+                        + "3.- Estacionario (2 Puntos)\n"
+                        + "4.- Estacionario (BLX)\n"
                         + "5.- ----\n"
                         + "6.- ----\n "
                         + "0.- Salir"
@@ -77,6 +78,7 @@ public class main {
                 switch( select ) {
                     case 1:
                         startTime = System.nanoTime();
+                        Generacional.cruce = false;
                         Generacional generacional = new Generacional(transmisores, frecuencias, rest);
                         endTime = System.nanoTime();
                         generacional.resMejorIndividuo();
@@ -85,15 +87,14 @@ public class main {
                         System.out.println("Tiempo de ejecucion: " + duration + " segundos");
                         break;
                     case 2:
-//                        startTime = System.nanoTime();
-//                        BusquedaLocal busquedaLocal = new BusquedaLocal(transmisores, frecuencias, rest);
-//                        busquedaLocal.algoritmo();
-//                        endTime = System.nanoTime();
-//                        busquedaLocal.resultados();
-//
-//                        duration = (endTime - startTime) / 1000000000;
-//                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
-
+                        startTime = System.nanoTime();
+                        Generacional.cruce = true;
+                        generacional = new Generacional(transmisores, frecuencias, rest);
+                        endTime = System.nanoTime();
+                        generacional.resMejorIndividuo();
+                        
+                        duration = (endTime - startTime) / 1000000000;
+                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
                         break;
                     case 3:
 //                        startTime = System.nanoTime();
