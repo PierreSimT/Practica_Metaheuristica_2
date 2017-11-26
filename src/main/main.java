@@ -5,6 +5,7 @@
  */
 package main;
 
+import Algoritmos.P2.Estacionario;
 import Utils.Restricciones;
 import Utils.listaTransmisores;
 import Utils.rangoFrec;
@@ -95,14 +96,13 @@ public class main {
 
                         break;
                     case 3:
-//                        startTime = System.nanoTime();
-//                        BusquedaTabu busquedaTabu = new BusquedaTabu(transmisores, frecuencias, rest);
-//                        busquedaTabu.algoritmo();
-//                        endTime = System.nanoTime();
+                        startTime = System.nanoTime();
+                        Estacionario estacionario = new Estacionario(transmisores, frecuencias, rest);
+                        endTime = System.nanoTime();
 //
-//                        busquedaTabu.resultados();
-//                        duration = (endTime - startTime) / 1000000000;
-//                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
+                        estacionario.resMejorIndividuo();
+                        duration = (endTime - startTime) / 1000000000;
+                        System.out.println("Tiempo de ejecucion: " + duration + " segundos");
 
                         break;
                     case 4:
