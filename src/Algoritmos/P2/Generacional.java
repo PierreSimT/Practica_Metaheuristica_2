@@ -55,7 +55,7 @@ public class Generacional {
 
         //Loop hasta 20000 evaluaciones
         while( numEvaluaciones < 20000 ) {
-            generarHijos();
+            seleccionarPadres();
             cruzarIndividuos();
             mutarIndividuos();
             nuevaGeneracion();
@@ -131,7 +131,7 @@ public class Generacional {
         frecuenciasR.clear(); // Borra todos los elementos anteriores para nueva solucion
     }
 
-    void generarHijos () {
+    void seleccionarPadres () {
         for ( int i = 0; i < 50; i ++ ) {
             Random numero = NUMERO;
             int seleccionado = numero.nextInt(50);
@@ -223,7 +223,7 @@ public class Generacional {
             solucion1.add(i, frecuenciaFinal);
 
             //Para la solución 2
-            int valorObtenido2 = (int) Math.floor(Math.random() * (vmax - vmin + 1) + vmin);
+            int valorObtenido2 = numero.nextInt(vmax+1)+vmin;
             int minimaDiferencia2 = Integer.MAX_VALUE;
             int frecuenciaFinal2 = 0;
 
@@ -451,20 +451,7 @@ public class Generacional {
             }
         }
 
-        System.out.println(resultado[ actual ]);
+        System.out.println("Resultado: "+resultado[ actual ]);
     }
     
-    public int resultadoFinal () {
-        int minimo = Integer.MAX_VALUE;
-        int actual = 0;
-        for ( int i = 0; i < 50; i ++ ) {
-            if ( resultado[ i ] < minimo ) {
-                minimo = resultado[ i ];
-                actual = i;
-            }
-        }
-        List<Integer> mejorIndividuo = padres.get(actual);
-        
-        return resultado[actual];
-    }
 }

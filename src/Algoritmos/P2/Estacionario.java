@@ -56,7 +56,7 @@ public class Estacionario {
         }
 
         while( numEvaluaciones < 20000 ) {
-            generarHijos();
+            seleccionarPadres();
             cruzarIndividuos();
             mutarIndividuos();
             nuevaGeneracion();
@@ -132,7 +132,7 @@ public class Estacionario {
         frecuenciasR.clear(); // Borra todos los elementos anteriores para nueva solucion
     }
 
-    void generarHijos () {
+    void seleccionarPadres () {
         int cont = 0;
         while( cont < 2 ) {
             Random numero = NUMERO;
@@ -223,7 +223,7 @@ public class Estacionario {
             solucion1.add(i, frecuenciaFinal);
 
             //Para la solución 2
-            int valorObtenido2=(int)Math.floor(Math.random()*(vmax-vmin+1)+vmin);
+            int valorObtenido2=n.nextInt(vmax+1)+vmin;
             int minimaDiferencia2=Integer.MAX_VALUE;
             int frecuenciaFinal2=0;
             
@@ -330,13 +330,7 @@ public class Estacionario {
         //Los hijos serán los padres para la siguiente generación
         hijos.clear();
 
-        if ( aux == mejorResult ) {
-            numGeneraciones ++;
-        } else {
-            numGeneraciones = 0;
-        }
-
-        if ( numGeneraciones >= 20 || comprobarConvergencia() ) {
+        if ( comprobarConvergencia() ) {
             reinicializacion();
             numGeneraciones = 0;
         }
@@ -440,19 +434,4 @@ public class Estacionario {
 
         System.out.println(resultado.get(actual));
     }
-    
-    public int resultadoFinal () {
-        int minimo = Integer.MAX_VALUE;
-        int actual = 0;
-        for ( int i = 0; i < 50; i ++ ) {
-            if ( resultado.get(i) < minimo ) {
-                minimo = resultado.get(i);
-                actual = i;
-            }
-        }
-        List<Integer> mejorIndividuo = padres.get(actual);
-        
-        return resultado.get(actual);
-    }
-    
 }
